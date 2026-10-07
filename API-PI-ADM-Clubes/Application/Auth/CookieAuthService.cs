@@ -9,19 +9,14 @@ namespace API_PI_ADM_Clubes.Infrastructure.Security
 {
     public class CookieAuthService : ICookieAuthService
     {
-        public async Task SignInAsync(HttpContext httpContext, User user)
+        public async Task SignInAsync(HttpContext httpContext, Manager manager)
         {
             var claims = new List<Claim>
             {
-                new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new(ClaimTypes.Name, user.Name),
-                new(ClaimTypes.Email, user.Email)
+                new(ClaimTypes.NameIdentifier, manager.Id.ToString()),
+                new(ClaimTypes.Name, manager.Name),
+                new(ClaimTypes.Email, manager.Email)
             };
-
-            foreach (var role in user.Role.ToString().Split(','))
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role.Trim()));
-            }
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);

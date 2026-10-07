@@ -8,6 +8,7 @@ namespace API_PI_ADM_Clubes.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ClubController : ControllerBase
     {
         private readonly IClubService _service;
@@ -32,7 +33,6 @@ namespace API_PI_ADM_Clubes.Controllers
             return Ok(result);
         }
         
-        [Authorize(Roles = "Admin")]
         [HttpGet("admin/{id}")]
         public async Task<IActionResult> GetAllByAdminId(Guid id, CancellationToken cancellationToken)
         {
@@ -40,7 +40,6 @@ namespace API_PI_ADM_Clubes.Controllers
             return Ok(result);
         }
         
-        [Authorize(Roles = "Admin")]
         [HttpGet("{id}/dashboard")]
         public async Task<IActionResult> GetDashboard(Guid id, CancellationToken cancellationToken)
         {
@@ -48,7 +47,6 @@ namespace API_PI_ADM_Clubes.Controllers
             return Ok(result);
         }
         
-        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, UpdateClubDTO dto, CancellationToken cancellationToken)
         {
@@ -57,7 +55,6 @@ namespace API_PI_ADM_Clubes.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {

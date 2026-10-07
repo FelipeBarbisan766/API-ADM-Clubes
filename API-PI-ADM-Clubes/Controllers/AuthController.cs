@@ -13,6 +13,7 @@ namespace API_PI_ADM_Clubes.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -24,13 +25,14 @@ namespace API_PI_ADM_Clubes.Controllers
             _cookieAuthService = cookieAuthService;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(AuthDTO dto, CancellationToken cancellationToken)
         {
             try
             {
-                var user = await _authService.LoginAsync(dto, cancellationToken);
-                await _cookieAuthService.SignInAsync(HttpContext, user);
+                var manager = await _authService.LoginAsync(dto, cancellationToken);
+                await _cookieAuthService.SignInAsync(HttpContext, manager);
                 return Ok("Login realizado com sucesso");
             }
             catch (Exception ex)
@@ -38,90 +40,17 @@ namespace API_PI_ADM_Clubes.Controllers
                 return Unauthorized(ex.Message);
             }
         }
-
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(CreatUserDTO dto, CancellationToken cancellationToken)
-        {
-            await _authService.Register(dto, cancellationToken);
-            return Ok("Usuário registrado! Verifique seu e-mail.");
-        }
-
-        [HttpPost("verify")]
-        public async Task<IActionResult> VerifyEmail([FromBody] VerifyToken request, CancellationToken cancellationToken)
-        {
-            var result = await _authService.ValidateEmailToken(request.Token, cancellationToken);
-    
-            if (!result)
-                return BadRequest("O link de verificação é inválido ou expirou.");
-        
-            return Ok("E-mail verificado com sucesso!");
-        }
-
-        [HttpPost("resend")]
-        public async Task<IActionResult> ResendEmail(string email, CancellationToken cancellationToken)
-        {
-            await _authService.ResendEmailToken(email, cancellationToken);
-            return Ok("Verifique seu e-mail.");
-        }
-
-        [HttpPost("requestPassword")]
-        public async Task<IActionResult> RequestResetPassword(string email, CancellationToken cancellationToken)
-        {
-            await _authService.RequestResetPassword(email, cancellationToken);
-            return Ok("Requisisao realizada! Verifique seu e-mail.");
-        }
-
-        [HttpPost("resetPassword")]
-        public async Task<IActionResult> ResetPassword([FromBody]ResetPassword request, CancellationToken cancellationToken)
-        {
-            var result = await _authService.ResetPassword(request, cancellationToken);
-            if (!result)
-                return BadRequest("O link de verificação é inválido ou expirou.");
-            return Ok("Senha recuperada com sucesso!");
-        }
-        [Authorize]
-        [HttpPost("changePassword")]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO request, CancellationToken cancellationToken)
-        {
-            var userId = User.GetUserId();
-            await _authService.ChangePassword(userId, request, cancellationToken);
-            return NoContent();
-        }
-
-        [HttpPost("logout")]
-        public async Task<IActionResult> Logout( CancellationToken cancellationToken)
-        {
-            await _cookieAuthService.SignOutAsync(HttpContext);
-            return Ok("Logout realizado com sucesso");
-        }
-
-        [HttpGet("me")]
-        public async Task<IActionResult> GetCurrentUser(CancellationToken cancellationToken)
-        {
-            if (User.Identity?.IsAuthenticated != true)
-                return Ok(new { isAuthenticated = false, user = (UserDTO?)null });
-
-            var userId = User.GetUserId();
-            var result = await _authService.GetCurrentUserInfo(userId, cancellationToken);
-            return Ok(new { isAuthenticated = true, user = result });
-        }
-
-        [HttpPost("google/signup")]
-        public async Task<IActionResult> GoogleSignUp([FromBody] GoogleSignUpRequest request, CancellationToken cancellationToken)
-        {
-            await _authService.GoogleSignUp(request.IdToken, cancellationToken);
-            return Ok("Usuario gerado com sucesso!");
-        }
-
+        [AllowAnonymous]
         public record GoogleSignUpRequest(string IdToken);
 
+        [AllowAnonymous]
         [HttpPost("google/login")]
         public async Task<IActionResult> GoogleLogin([FromBody] GoogleSignUpRequest request, CancellationToken cancellationToken)
         {
             try
             {
-                var user = await _authService.GoogleLogin(request.IdToken, cancellationToken);
-                await _cookieAuthService.SignInAsync(HttpContext, user);
+                var manager = await _authService.GoogleLogin(request.IdToken, cancellationToken);
+                await _cookieAuthService.SignInAsync(HttpContext, manager);
                 return Ok("Login realizado com sucesso");
             }
             catch (Exception ex)
@@ -130,13 +59,5 @@ namespace API_PI_ADM_Clubes.Controllers
             }
         }
         
-        [Authorize]
-        [HttpPatch("complete-profile")]
-        public async Task<IActionResult> CompleteProfile(CompleteProfileDTO dto, CancellationToken cancellationToken)
-        {
-            var userId = User.GetUserId();
-            await _authService.CompleteProfile(userId, dto, cancellationToken);
-            return Ok("Perfil completado com sucesso! Você já pode reservar quadras.");
-        }
     }
 }

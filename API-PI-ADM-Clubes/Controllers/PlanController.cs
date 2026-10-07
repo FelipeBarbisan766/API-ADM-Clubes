@@ -8,7 +8,7 @@ namespace API_PI_ADM_Clubes.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "admin")]
+    [Authorize]
     public class PlanController: ControllerBase
     {
         private readonly IPlanService _service;
@@ -18,7 +18,6 @@ namespace API_PI_ADM_Clubes.Controllers
         }
         
         [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
             var plans = await _service.GetAllActiveAsync(cancellationToken);

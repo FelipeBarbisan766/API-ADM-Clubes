@@ -23,14 +23,12 @@ public class ClubReviewsController : ControllerBase
     }
 
     [HttpGet("summary")]
-    [AllowAnonymous]
     public async Task<IActionResult> GetSummary(Guid clubId, CancellationToken cancellationToken)
     {
         var summary = await _service.GetSummary(clubId, cancellationToken);
         return Ok(summary);
     }
     [HttpGet("verify")]
-    [AllowAnonymous]
     public async Task<IActionResult> VerifyReview(Guid clubId, CancellationToken cancellationToken)
     {
         var userId = User.GetUserId();

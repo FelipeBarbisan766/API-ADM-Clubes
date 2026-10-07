@@ -13,6 +13,7 @@ namespace API_PI_ADM_Clubes.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AdminController : ControllerBase
     {
         private readonly IAdminService _service;
@@ -29,14 +30,12 @@ namespace API_PI_ADM_Clubes.Controllers
         }
       
 
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
         {
             var result = await _service.GetById(id, cancellationToken);
             return Ok(result);
         }
-        [Authorize(Roles = "Admin")]
         [HttpGet("me")]
         public async Task<IActionResult> GetCurrentUser(CancellationToken cancellationToken)
         {
@@ -45,24 +44,23 @@ namespace API_PI_ADM_Clubes.Controllers
             return Ok(result);
         }
     
-        [Authorize(Roles = "Player")]
-        [HttpPost]
-        public async Task<IActionResult> Create(CancellationToken cancellationToken)
-        {
-            var userId = User.GetUserId();
-            
-            var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
-            if (user == null)
-                return NotFound("User not found.");
+        // [Authorize(Roles = "Player")]
+        // [HttpPost]
+        // public async Task<IActionResult> Create(CancellationToken cancellationToken)
+        // {
+        //     var userId = User.GetUserId();
+        //     
+        //     var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
+        //     if (user == null)
+        //         return NotFound("User not found.");
+        //
+        //     var result = await _service.Create(userId, cancellationToken);
+        //
+        //     await _cookieAuthService.SignInAsync(HttpContext, user);
+        //
+        //     return Ok(result);
+        // }
 
-            var result = await _service.Create(userId, cancellationToken);
-
-            await _cookieAuthService.SignInAsync(HttpContext, user);
-
-            return Ok(result);
-        }
-
-        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, UpdateAdminDTO dto, CancellationToken cancellationToken)
         {
@@ -71,7 +69,6 @@ namespace API_PI_ADM_Clubes.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {

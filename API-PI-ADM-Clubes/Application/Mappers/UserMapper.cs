@@ -14,7 +14,13 @@ namespace API_PI_ADM_Clubes.Application.Mappers
                 Name = user.Name,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
-                AvatarUrl =  user.AvatarUrl
+                AvatarUrl =  user.AvatarUrl,
+                Role = user.Role,
+                IsActive = user.IsActive,
+                BirthDate = user.BirthDate,
+                CreatedAt = user.CreatedAt,
+                UpdatedAt =  user.UpdatedAt,
+                Provider =  user.Provider
             };
         }
 
