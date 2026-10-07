@@ -24,7 +24,7 @@ namespace API_PI_ADM_Clubes.Infrastructure.Data
         public DbSet<Image> Images { get; set; }
         public DbSet<Sport> Sports { get; set; }  
         public DbSet<CourtSport> CourtSports { get; set; }
-        
+        public DbSet<Manager>  Managers { get; set; }
         public DbSet<Flag> Flags { get; set; }
         public DbSet<FlagPlayer> FlagPlayers { get; set; }
         public DbSet<ClubReview> ClubReviews { get; set; }

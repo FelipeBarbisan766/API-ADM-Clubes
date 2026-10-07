@@ -1,10 +1,12 @@
 using API_PI_ADM_Clubes.Application.Interfaces.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API_PI_ADM_Clubes.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SportController : ControllerBase
     {
         private readonly ISportService _service;

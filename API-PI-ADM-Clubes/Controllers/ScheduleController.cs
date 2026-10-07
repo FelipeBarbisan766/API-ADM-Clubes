@@ -8,6 +8,7 @@ namespace API_PI_ADM_Clubes.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ScheduleController : ControllerBase
     {
         private readonly IScheduleService _service;
@@ -45,7 +46,6 @@ namespace API_PI_ADM_Clubes.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create(CreatScheduleDTO dto, CancellationToken cancellationToken)
         {
@@ -53,7 +53,6 @@ namespace API_PI_ADM_Clubes.Controllers
             return Ok(result);
         }
         
-        [Authorize(Roles = "Admin")]
         [HttpPost("court/{courtId}/bulk")]
         public async Task<IActionResult> CreateBulk(Guid courtId, CreateBulkScheduleDTO dto, CancellationToken cancellationToken)
         {
@@ -62,7 +61,6 @@ namespace API_PI_ADM_Clubes.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, UpdateScheduleDTO dto, CancellationToken cancellationToken)
         {
@@ -71,7 +69,6 @@ namespace API_PI_ADM_Clubes.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {

@@ -9,6 +9,7 @@ namespace API_PI_ADM_Clubes.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _service;
@@ -17,7 +18,6 @@ namespace API_PI_ADM_Clubes.Controllers
             _service = service;
         }
         
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
         {
@@ -25,7 +25,6 @@ namespace API_PI_ADM_Clubes.Controllers
             return Ok(result);
         }
 
-        [Authorize]
         [HttpPut]
         public async Task<IActionResult> Update(UpdateUserDTO dto, CancellationToken cancellationToken)
         {
@@ -35,7 +34,6 @@ namespace API_PI_ADM_Clubes.Controllers
         }
         
 
-        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> Delete(CancellationToken cancellationToken)
         {

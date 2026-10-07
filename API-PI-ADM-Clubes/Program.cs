@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.FileProviders;
 using StackExchange.Redis;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,7 +55,7 @@ builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.Cookie.Name = "clubera_auth";
+        options.Cookie.Name = "clubera_auth_adm";
         options.Cookie.HttpOnly = true;
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 
@@ -77,6 +78,12 @@ builder.Services
             }
         };
     });
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
 
 builder.Services.AddSignalR()
     .AddJsonProtocol(options => { options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });

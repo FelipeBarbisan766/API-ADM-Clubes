@@ -13,6 +13,7 @@ namespace API_PI_ADM_Clubes.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PlayerController : ControllerBase
     {
         private readonly IPlayerService _service;
@@ -33,7 +34,6 @@ namespace API_PI_ADM_Clubes.Controllers
             return Ok(result);
         }
         
-        [Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> GetCurrentUser(CancellationToken cancellationToken)
         {
@@ -51,7 +51,6 @@ namespace API_PI_ADM_Clubes.Controllers
         //     return Ok(result);
         // }
 
-        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> Delete(CancellationToken cancellationToken)
         {
@@ -67,14 +66,12 @@ namespace API_PI_ADM_Clubes.Controllers
         }
 
         [HttpPost("profile-name")]
-        [Authorize]
         public async Task<IActionResult> SetProfileName([FromBody] SetProfileNameDTO dto, CancellationToken cancellationToken)
         {
             var userId = User.GetUserId();
             var result = await _service.SetProfileName(userId, dto, cancellationToken);
             return Ok(result);
         }
-        [Authorize]
         [HttpGet("favorite-sports")]
         public async Task<IActionResult> GetFavoriteSports(CancellationToken cancellationToken)
         {
@@ -83,7 +80,6 @@ namespace API_PI_ADM_Clubes.Controllers
             return Ok(result);
         }
 
-        [Authorize]
         [HttpPost("favorite-sports")]
         public async Task<IActionResult> AddFavoriteSports([FromBody] AddFavoriteSportsDTO dto, CancellationToken cancellationToken)
         {
@@ -91,7 +87,6 @@ namespace API_PI_ADM_Clubes.Controllers
             var result = await _service.AddFavoriteSports(userId, dto, cancellationToken);
             return Ok(result);
         }
-        [Authorize]
         [HttpPut("favorite-sports")]
         public async Task<IActionResult> SetFavoriteSports([FromBody] SetFavoriteSportsDTO dto, CancellationToken cancellationToken)
         {

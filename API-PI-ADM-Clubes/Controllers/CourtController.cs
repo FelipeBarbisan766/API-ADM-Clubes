@@ -12,6 +12,7 @@ namespace API_PI_ADM_Clubes.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CourtController : ControllerBase
     {
         private readonly ICourtService _service;
@@ -44,7 +45,6 @@ namespace API_PI_ADM_Clubes.Controllers
         }
                 
         
-        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, UpdateCourtDTO dto, CancellationToken cancellationToken)
         {
@@ -52,7 +52,6 @@ namespace API_PI_ADM_Clubes.Controllers
             var result = await _service.Update(userId, id, dto, cancellationToken);
             return Ok(result);
         }
-        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {

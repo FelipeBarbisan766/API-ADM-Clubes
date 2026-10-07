@@ -8,7 +8,6 @@ namespace API_PI_ADM_Clubes.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class PaymentController : ControllerBase
     {
         private readonly IPaymentService _service;
