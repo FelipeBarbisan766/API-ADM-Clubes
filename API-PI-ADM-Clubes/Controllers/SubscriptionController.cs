@@ -1,0 +1,60 @@
+﻿using API_PI_ADM_Clubes.Application.DTOs;
+using API_PI_ADM_Clubes.Application.Interfaces.IServices;
+using API_PI_ADM_Clubes.Infrastructure.Extensions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace API_PI_ADM_Clubes.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize]
+    public class SubscriptionController : ControllerBase
+    {
+        private readonly ISubscriptionService _service;
+        private readonly IPlanLimitService _planLimitService;
+        public SubscriptionController(
+            ISubscriptionService service,
+            IPlanLimitService planLimitService
+            )
+        {
+            _service = service;
+            _planLimitService = planLimitService;
+        }
+
+        [HttpGet("active")]
+        public async Task<IActionResult> GetActive(CancellationToken cancellationToken)
+        {
+            var userId = User.GetUserId();
+            var subscription = await _service.GetActiveByAdminAsync(userId,cancellationToken);
+
+            if (subscription is null)
+                return NotFound("Nenhuma assinatura ativa encontrada.");
+
+            return Ok(subscription);
+        }
+
+        [HttpGet("check-access")]
+        public async Task<IActionResult> CheckAccess(CancellationToken cancellationToken)
+        {
+            var userId = User.GetUserId();
+            var hasAccess = await _service.CheckAccessAsync(userId,cancellationToken);
+            return Ok(new { hasAccess });
+        }
+
+        [HttpPost("cancel/{subscriptionId:guid}")]
+        public async Task<IActionResult> Cancel(Guid subscriptionId, CancellationToken cancellationToken)
+        {
+            var userId = User.GetUserId();
+            await _service.CancelAsync(subscriptionId, userId,cancellationToken);
+            return NoContent();
+        }
+        [HttpGet("me/usage")]
+        public async Task<ActionResult<PlanUsageDTO>> GetMyUsage(CancellationToken cancellationToken)
+        {
+            var userId = User.GetUserId();
+            var usage = await _planLimitService.GetUsageSummaryAsync(userId,cancellationToken); 
+            return Ok(usage);
+        }
+    }
+}

@@ -1,0 +1,101 @@
+﻿using API_PI_ADM_Clubes.Application.DTOs;
+using API_PI_ADM_Clubes.Application.Interfaces.IMappers;
+using API_PI_ADM_Clubes.Model;
+
+namespace API_PI_ADM_Clubes.Application.Mappers
+{
+    public class ClubMapper : IClubMapper
+    {
+        private static ImageDTO ToImageDTO(Image i) => new()
+        {
+            Id        = i.Id,
+            ThumbUrl  = i.ThumbUrl,
+            MediumUrl = i.MediumUrl,
+            FullUrl   = i.FullUrl,
+            Order     = i.Order
+        };
+
+        public ResponseClubDTO ToDTO(Club club)
+        {
+            return new ResponseClubDTO
+            {
+                Id = club.Id,
+                Name = club.Name,
+                PhoneNumber = club.PhoneNumber,
+                Street = club.Address.Street,
+                City = club.Address.City,
+                State = club.Address.State,
+                Country = club.Address.Country,
+                Description = club.Description,
+                MinPrice = club.Courts
+                    .Where(co => co.IsActive)
+                    .Min(co => (decimal?)co.PricePerHour) ?? 0,
+                CourtCount = club.Courts
+                    .Count(co => co.IsActive),
+                Sports = club.Courts
+                    .Where(co => co.IsActive)
+                    .SelectMany(co => co.CourtSports.Select(cs => cs.Sport))
+                    .GroupBy(s => s.Id)
+                    .Select(g => new ResponseSportDTO { Id = g.Key, Name = g.First().Name })
+                    .ToList(),
+                AverageRating = club.Reviews.Any()
+                    ? Math.Round(club.Reviews.Average(r => r.Rating), 1)
+                    : 0,
+                TotalReviews = club.Reviews.Count(),
+                Images = club.Images
+                    .Select(ToImageDTO)
+                    .ToList()
+            };
+        }
+
+        public IEnumerable<ResponseClubDTO> ToDTO(IEnumerable<Club> clubs)
+        {
+            return clubs.Select(ToDTO);
+        }
+
+        public ResponseClubByIdDTO ToDTOById(Club club)
+        {
+            return new ResponseClubByIdDTO
+            {
+                Name = club.Name,
+                PhoneNumber = club.PhoneNumber,
+                ZipCode = club.Address.ZipCode,
+                Street = club.Address.Street,
+                Number = club.Address.Number,
+                Neighborhood = club.Address.Neighborhood,
+                Complement = club.Address.Complement,
+                City = club.Address.City,
+                State = club.Address.State,
+                Country = club.Address.Country,
+                Description = club.Description,
+                AverageRating = club.Reviews.Any()
+                    ? Math.Round(club.Reviews.Average(r => r.Rating), 1)
+                    : 0,
+                TotalReviews = club.Reviews.Count(),
+                Images = club.Images
+                    .Select(ToImageDTO)
+                    .ToList(),
+
+                Courts = club.Courts
+                    .Where(co => co.IsActive)
+                    .Select(q => new ResponseCourtDTO
+                    {
+                        Id = q.Id,
+                        ClubId = q.ClubId,
+                        Name = q.Name,
+                        Surface = q.Surface,
+                        IsCovered = q.IsCovered,
+                        PricePerHour = q.PricePerHour,
+                        Description = q.Description,
+                        Sports = q.CourtSports
+                            .Select(cs => new ResponseSportDTO { Id = cs.Sport.Id, Name = cs.Sport.Name })
+                            .ToList(),
+                        Images = q.Images
+                            .Select(ToImageDTO)
+                            .ToList()
+                    }).ToList()
+
+            };
+        }
+    }
+}

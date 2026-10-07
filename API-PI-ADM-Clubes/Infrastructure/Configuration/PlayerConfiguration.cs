@@ -1,0 +1,30 @@
+﻿using API_PI_ADM_Clubes.Model;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace API_PI_ADM_Clubes.Infrastructure.Configuration
+{
+    public class PlayerConfiguration : IEntityTypeConfiguration<Player>
+    {
+        public void Configure(EntityTypeBuilder<Player> builder)
+        {
+            builder.HasKey(a => a.Id);
+            
+            builder.Property(p => p.ProfileName)
+                .HasMaxLength(20);
+
+            builder.HasIndex(p => p.ProfileName)
+                .IsUnique()
+                .HasFilter("[ProfileName] IS NOT NULL")
+                .HasDatabaseName("IX_Players_ProfileName");
+
+            builder.HasOne(a => a.User)
+                .WithMany(b => b.Players)
+                .HasForeignKey(a => a.UserId);
+            
+            builder.HasMany(p => p.Flags)
+                .WithOne(f => f.Player)
+                .HasForeignKey(f => f.PlayerId);
+        }
+    }
+}

@@ -1,0 +1,26 @@
+﻿using API_PI_ADM_Clubes.Application.DTOs;
+using API_PI_ADM_Clubes.Application.Interfaces.IMappers;
+using API_PI_ADM_Clubes.Model;
+using API_PI_ADM_Clubes.Model.Enums;
+
+namespace API_PI_ADM_Clubes.Application.Mappers
+{
+    public class AdminMapper : IAdminMapper
+    {
+        public ResponseAdminDTO ToDTO(Admin admin)
+        {
+            return new ResponseAdminDTO
+            {
+                Id = admin.Id,
+                TypeAccess = admin.TypeAccess,
+                UserId = admin.UserId
+
+            };
+        }
+
+        public IEnumerable<ResponseAdminDTO> ToDTO(IEnumerable<Admin> admins)
+        {
+            return admins.Select(ToDTO);
+        }
+    }
+}

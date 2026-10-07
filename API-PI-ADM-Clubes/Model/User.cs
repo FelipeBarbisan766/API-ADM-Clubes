@@ -1,0 +1,31 @@
+﻿using API_PI_ADM_Clubes.Model.Enums;
+using API_PI_ADM_Clubes.Model.ValueObjects;
+using Microsoft.AspNetCore.Identity;
+
+namespace API_PI_ADM_Clubes.Model
+{
+    public class User : BaseEntity
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string? PasswordHash { get; set; }
+        
+        public string? PhoneNumber { get; set; }
+        public DateOnly? BirthDate { get; set; }
+        public string? CpfEncrypted { get; set; }
+        public string? CpfHash { get; set; }
+
+        
+        public string? Description { get; set; }
+        
+        public string? AvatarUrl  { get; set; } = string.Empty;
+        
+        public EmailVerificationVO EmailVerification { get; set; }
+        public ResetPasswordVO ResetPassword { get; set; }
+        public RoleEnum Role { get; set; }
+        public string Provider { get; set; }
+
+        public virtual ICollection<Admin> Admins { get; set; }
+        public virtual ICollection<Player> Players { get; set; }
+    }
+}

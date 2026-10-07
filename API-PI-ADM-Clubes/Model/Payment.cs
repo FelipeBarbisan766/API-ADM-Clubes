@@ -1,0 +1,21 @@
+using API_PI_ADM_Clubes.Model.Enums;
+
+namespace API_PI_ADM_Clubes.Model
+{
+    public class Payment : BaseEntity
+        {
+            public decimal Amount { get; set; }
+            public DateTime Date { get; set; } = DateTime.UtcNow;
+            public PaymentMethod Method { get; set; }
+            public PaymentStatus Status { get; set; } = PaymentStatus.Pending;
+ 
+            public string? MercadoPagoPreferenceId { get; set; }  
+            public string? MercadoPagoPaymentId { get; set; } 
+ 
+            public Guid AdminId { get; set; }
+            public Guid PlanId { get; set; }
+
+            public Subscription? Subscription { get; set; }
+
+        }
+}

@@ -1,0 +1,42 @@
+﻿using API_PI_ADM_Clubes.Application.Interfaces.IRepositories;
+using API_PI_ADM_Clubes.Infrastructure.Data;
+using API_PI_ADM_Clubes.Model;
+using Microsoft.EntityFrameworkCore;
+
+namespace API_PI_ADM_Clubes.Infrastructure.Repositories
+{
+    public class PaymentRepository : IPaymentRepository
+    {
+        private readonly AppDbContext _context;
+
+        public PaymentRepository(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<Payment?> GetByIdAsync(Guid id,CancellationToken cancellationToken)
+            => await _context.Payments.FindAsync(new object[] { id }, cancellationToken);
+ 
+ 
+        public async Task<IEnumerable<Payment>> GetByAdminIdAsync(Guid adminId,CancellationToken cancellationToken)
+            => await _context.Payments
+                .Where(p => p.AdminId == adminId)
+                .OrderByDescending(p => p.Date)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
+ 
+        public async Task AddAsync(Payment payment)
+        {
+            await _context.Payments.AddAsync(payment);
+            await _context.SaveChangesAsync();
+        }
+ 
+        public async Task UpdateAsync(Payment payment)
+        {
+            _context.Payments.Update(payment);
+            await _context.SaveChangesAsync();
+        }
+
+    
+    }
+}

@@ -1,0 +1,45 @@
+﻿using API_PI_ADM_Clubes.Model.Enums;
+
+namespace API_PI_ADM_Clubes.Application.DTOs
+{
+    public class CreatPlayerDTO
+    {
+        public Guid UserId { get; set; }
+    }
+
+    public class UpdatePlayerDTO
+    {
+        public List<Guid> FavoriteSportIds { get; set; } = new();
+    }
+
+    public class ResponsePlayerDTO
+    {
+        public Guid Id { get; set; }
+        public RankCategoryEnum RankCategory { get; set; }
+        public Guid UserId { get; set; }
+        public List<ResponseSportDTO> FavoriteSports { get; set; } = new();
+        
+    }
+    public class ResponsePlayerByIdDTO
+    {
+        public Guid Id { get; set; }
+        public RankCategoryEnum RankCategory { get; set; }
+        public Guid UserId { get; set; }
+        public string? ProfileName { get; set; }
+        public int TotalFlags { get; set; }
+        public List<FlagDTO.FlagTypeCountDto> FlagsByType { get; set; } = new();
+    }
+    public class SetProfileNameDTO
+    {
+        public string ProfileName { get; set; }
+    }
+    public class AddFavoriteSportsDTO
+    {
+        public List<Guid> SportIds { get; set; }
+    }
+    public class SetFavoriteSportsDTO
+    {
+        public List<Guid> SportIds { get; set; }
+    }
+
+}

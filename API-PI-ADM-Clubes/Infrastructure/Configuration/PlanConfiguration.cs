@@ -1,0 +1,57 @@
+using API_PI_ADM_Clubes.Application.Common;
+using API_PI_ADM_Clubes.Model;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace API_PI_ADM_Clubes.Infrastructure.Configuration;
+
+public class PlanConfiguration : IEntityTypeConfiguration<Plan>
+{
+    public void Configure(EntityTypeBuilder<Plan> builder)
+    {
+        builder.ToTable("Plans");
+ 
+        builder.HasKey(p => p.Id);
+ 
+        builder.Property(p => p.Name)
+            .IsRequired()
+            .HasMaxLength(100);
+ 
+        builder.Property(p => p.Description)
+            .HasMaxLength(500);
+ 
+        builder.Property(p => p.Price)
+            .HasColumnType("decimal(10,2)")
+            .IsRequired();
+ 
+        builder.Property(p => p.QuantClub)
+            .IsRequired();
+ 
+        builder.Property(p => p.QuantCourt)
+            .IsRequired();
+ 
+        builder.Property(p => p.DurationDays)
+            .IsRequired();
+ 
+        builder.Property(p => p.IsActive)
+            .HasDefaultValue(true);
+ 
+        builder.Property(p => p.CreatedAt)
+            .HasDefaultValueSql("GETUTCDATE()");
+
+        builder.HasData(
+            new Plan
+            {
+                Id = PlanConstants.FreePlanId, 
+                Name = "Free",
+                Description = "Plano Basico Gratuito", 
+                Price = 0m, 
+                QuantClub = 1, 
+                QuantCourt = 1, 
+                DurationDays = 30,
+                IsActive = true, 
+                CreatedAt = new DateTime(2023, 10, 1, 0, 0, 0, DateTimeKind.Utc) 
+            } 
+        );
+    }
+}

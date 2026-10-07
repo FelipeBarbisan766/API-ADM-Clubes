@@ -1,0 +1,43 @@
+﻿using API_PI_ADM_Clubes.Application.DTOs;
+using API_PI_ADM_Clubes.Application.Interfaces.IMappers;
+using API_PI_ADM_Clubes.Model;
+
+namespace API_PI_ADM_Clubes.Application.Mappers
+{
+    public class CourtMapper : ICourtMapper
+    {
+        private static ImageDTO ToImageDTO(Image i) => new()
+        {
+            Id        = i.Id,
+            ThumbUrl  = i.ThumbUrl,
+            MediumUrl = i.MediumUrl,
+            FullUrl   = i.FullUrl,
+            Order     = i.Order
+        };
+
+        public ResponseCourtDTO ToDTO(Court court)
+        {
+            return new ResponseCourtDTO
+            {
+                Id = court.Id,
+                Name = court.Name,
+                Surface = court.Surface,
+                IsCovered = court.IsCovered,
+                PricePerHour = court.PricePerHour,
+                Description = court.Description,
+                ClubId = court.ClubId,
+                Sports = court.CourtSports?
+                    .Select(cs => new ResponseSportDTO { Id = cs.Sport.Id, Name = cs.Sport.Name })
+                    .ToList() ?? new List<ResponseSportDTO>(),
+                Images = court.Images
+                    .Select(ToImageDTO)
+                    .ToList()
+            };
+        }
+
+        public IEnumerable<ResponseCourtDTO> ToDTO(IEnumerable<Court> courts)
+        {
+            return courts.Select(ToDTO);
+        }
+    }
+}

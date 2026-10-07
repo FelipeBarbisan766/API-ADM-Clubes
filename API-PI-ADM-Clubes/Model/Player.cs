@@ -1,0 +1,17 @@
+﻿using API_PI_ADM_Clubes.Model.Enums;
+
+namespace API_PI_ADM_Clubes.Model
+{
+    public class Player : BaseEntity
+    {
+        public RankCategoryEnum RankCategory { get; set; }
+        public string? ProfileName { get; set; } 
+
+        public Guid UserId { get; set; }
+        public virtual User User { get; set; }
+
+        public virtual ICollection<Reserve> Reserves { get; set; }
+        public virtual ICollection<FlagPlayer> Flags { get; set; } = new List<FlagPlayer>();
+        public virtual ICollection<PlayerFavoriteSport> FavoriteSports { get; set; }
+    }
+}

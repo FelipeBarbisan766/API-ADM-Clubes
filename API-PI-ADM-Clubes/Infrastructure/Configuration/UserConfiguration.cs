@@ -1,0 +1,22 @@
+﻿using API_PI_ADM_Clubes.Model;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace API_PI_ADM_Clubes.Infrastructure.Configuration
+{
+    public class UserConfiguration : IEntityTypeConfiguration<User>
+    {
+        public void Configure(EntityTypeBuilder<User> builder)
+        {
+            builder.HasKey(a => a.Id);
+
+            builder.OwnsOne(x => x.EmailVerification);
+            builder.OwnsOne(x => x.ResetPassword);
+            
+            builder.Property(u => u.CpfEncrypted).HasMaxLength(256);
+            builder.Property(u => u.CpfHash).HasMaxLength(64);
+
+            builder.HasIndex(u => u.CpfHash).IsUnique().HasFilter("[CpfHash] IS NOT NULL");
+        }
+    }
+}

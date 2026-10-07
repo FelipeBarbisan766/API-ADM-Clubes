@@ -1,0 +1,11 @@
+using API_PI_ADM_Clubes.Application.DTOs;
+
+namespace API_PI_ADM_Clubes.Application.Interfaces.IServices
+{
+    public interface IPlanLimitService
+    {
+        Task EnsureClubLimitNotReachedAsync(Guid userId, CancellationToken cancellationToken);
+        Task EnsureCourtLimitNotReachedAsync(Guid userId, Guid clubId,CancellationToken cancellationToken);
+        Task<PlanUsageDTO> GetUsageSummaryAsync(Guid userId, CancellationToken cancellationToken);
+    }
+}
